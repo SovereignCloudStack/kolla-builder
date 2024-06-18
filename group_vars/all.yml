@@ -21,7 +21,7 @@ mac_addresses: {}
 vms_to_delete:
   - "{{ node_name }}"
 kolla_user: "kolla"
-kolla_ssh_key: "{{ lookup('ansible.builtin.env', 'HOME') }}/.ssh/id_kola"
+kolla_ssh_key: "{{ lookup('ansible.builtin.env', 'HOME') }}/.ssh/id_kolla"
 ssh_config: "ssh_config"
 kolla_python_interpereter: "/home/kolla/kolla/bin/python"
 ansible_args: >-

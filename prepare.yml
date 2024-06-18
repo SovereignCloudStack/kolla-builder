@@ -60,25 +60,26 @@
   become: false
   vars:
     ansible_ssh_common_args: '-o IdentitiesOnly=yes'
+
   pre_tasks:
-    - name: Get target hostname
-      set_fact:
-        target_host: "{{ inventory_hostname }}"
+    - name: Get control IP data
+      ansible.builtin.shell:
+        cmd: 'who | cut -d "(" -f2 | cut -d ")" -f1'
+      changed_when: false
+      check_mode: false
+      register: host_ip_data
+      when: ara_enable | bool
 
-    - name: Check route on controller for target destination
-      ansible.builtin.command: ip route get {{ target_host }}
-      register: route_output
-      delegate_to: localhost
-
-    - name: Register the controller outgoing IP
+    - name: Extract host IP from data
       ansible.builtin.set_fact:
-        controller_ip: "{{ route_output.stdout_lines[0] | regex_replace('^.* src (\\d*(\\.\\d*){3}).*$', '\\1') }}"
+        host_ip: "{{ host_ip_data.stdout_lines[0] }}"
+
   roles:
     - role: config_ara_recording
       become: true
       become_user: kolla
       vars:
-        ara_server_ip: "{{ controller_ip }}"
+        ara_server_ip: "{{ host_ip }}"
         config_to_edit: "~/ansible.cfg"
         python_bin_path: "/home/kolla/kolla/bin/"
       when: ara_enable | bool
