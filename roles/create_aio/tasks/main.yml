@@ -12,7 +12,7 @@
   delegate_to: localhost
   template:
     src: all-in-one.j2
-    dest: kolla-inventory
+    dest: "{{ aio_filepath }}"
 
 - name: Add Proxy Jump to SSH Config
   include_role:

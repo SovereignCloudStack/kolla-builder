@@ -16,3 +16,4 @@ generate_mac_addresses: false
 mac_addresses: []
 ssh_config: "ssh_config"
 is_remote: false
+libvirt_domain_type: kvm

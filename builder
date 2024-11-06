@@ -65,7 +65,13 @@ fi
 vmlist=""
 
 if [ "$action" == "prepare" ]; then
-    inventory="kolla-inventory"
+    kolla_inventory=$(grep "inventory_name:" $user_variables | cut -d" " -f2 | sed 's/"//g')
+    if [ -z "${kolla_inventory}" ]; then
+        inventory="kolla-inventory"
+    else
+        inventory="${kolla_inventory}"
+    fi
+
 
 elif [ "$action" == "delete" ]; then
     vmlist="-e @vm_list.yml"

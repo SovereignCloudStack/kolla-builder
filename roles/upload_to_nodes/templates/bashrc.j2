@@ -1,0 +1,15 @@
+source kolla/bin/activate
+export EXT_NET_CIDR='{{ external_network_cidr }}'
+export EXT_NET_RANGE='start={{ external_network_dhcp_start }},end={{ external_network_dhcp_end }}'
+export EXT_NET_GATEWAY='{{ external_network_gateway }}'
+
+export DEMO_NET_CIDR='{{ demo_net_cidr }}'
+export DEMO_NET_GATEWAY='{{demo_net_gateway}}'
+export DEMO_NET_DNS='{{demo_net_dns}}'
+
+# Specify clouds.yaml file to use
+export OS_CLIENT_CONFIG_FILE=/etc/kolla/clouds.yaml
+
+# Select admin account from clouds.yaml
+export OS_CLOUD=kolla-admin
+

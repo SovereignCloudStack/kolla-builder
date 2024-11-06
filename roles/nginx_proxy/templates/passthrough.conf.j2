@@ -1,5 +1,5 @@
 stream {
-{% macro stream(port,ssl=false, ip=globals.kolla_internal_vip_address)%}
+{% macro stream(port,ssl=false, ip=reverse_proxy_ip_address)%}
 server {
     listen {{port}};
     proxy_pass  {{ip}}:{{port}};

@@ -9,3 +9,7 @@ mode: ""
 kolla_vip_last_digit: 200
 kolla_internal_vip_address: "192.168.123.200"
 globals_file: null
+
+demo_net_cidr: "10.0.0.0/24"
+demo_net_gateway: "10.0.0.1"
+demo_net_dns: "8.8.8.8"

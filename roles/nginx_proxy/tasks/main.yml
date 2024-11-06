@@ -2,7 +2,7 @@
 # tasks file for nginx_proxy
 - name: Register Kolla Variables
   set_fact:
-    globals: "{{ lookup('file', 'kolla-files/' ~ globals_file) | from_yaml }}"
+    globals: "{{ lookup('file', 'kolla-files/' ~ globals_file | default('') ) | from_yaml }}"
 - name: Get Kolla uses external TLS
   set_fact:
     use_tls: "{{ globals.kolla_enable_tls_external | default(false) }}"

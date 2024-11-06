@@ -1,4 +1,5 @@
 ---
+reverse_proxy_ip_address: "{{kolla_internal_vip_address}}"
 # 80 and 443 Are added automatically depending on your kolla settings
 # If your remote server is on the cloud, make sure
 # ingress to all ports you forward is allowed

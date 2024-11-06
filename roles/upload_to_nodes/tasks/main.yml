@@ -32,7 +32,13 @@
     group: kolla
     mode: '0644'
 
-  when: globals_file != None
+- name: Template 'init-runonce' demo setup file
+  template:
+    src: init-runonce.j2
+    dest: /home/kolla/init-runonce
+    owner: kolla
+    group: kolla
+    mode: '0775'
 - name: Copy all-in-one to deploy node
   copy:
     src: kolla-files/all-in-one
@@ -75,10 +81,10 @@
     mode: "0600"
   when: not is_aio
 
-- name: Ensure kolla venv is sourced on login
-  lineinfile:
+- name: Template extra bashrc
+  blockinfile:
     path: /home/kolla/.bashrc
-    line: "source kolla/bin/activate"
+    block: "{{ lookup('template', 'bashrc.j2') }}"
     state: present
 
 - name: Set KOLLA_INVENTORY to multinode

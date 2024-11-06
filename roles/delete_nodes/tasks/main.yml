@@ -38,13 +38,13 @@
     state: absent
   loop: "{{ to_delete }}"
 
-- name: Deleting SSH proxy entry
-  delegate_to: localhost
-  blockinfile:
-    path: "{{ ssh_config }}"
-    marker: "# {mark} KOLLA-PROXY"
-    state: absent
-  when: is_remote
+# - name: Deleting SSH proxy entry
+#   delegate_to: localhost
+#   blockinfile:
+#     path: "{{ ssh_config }}"
+#     marker: "# {mark} KOLLA-PROXY"
+#     state: absent
+#   when: is_remote
 
 - name: Add remove host from dhcp pool
   shell: |

@@ -8,3 +8,4 @@ libvirt_network_ip_gateway: "192.168.100.1"
 libvirt_network_ip_netmask: 255.255.255.0
 libvirt_network_domain: kolla.local
 libvirt_network_auto_dhcp: true
+libvirt_network_type: nat

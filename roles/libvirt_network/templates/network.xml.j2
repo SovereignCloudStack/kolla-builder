@@ -1,12 +1,15 @@
 <network>
   <name>{{ libvirt_network_name }}</name>
   <bridge name="{{ libvirt_network_bridge }}" />
-  <forward mode='nat'/>
+  <forward mode='{{ libvirt_network_type }}'/>
+{% if libvirt_network_type != 'bridge' %}
   <ip address="{{ libvirt_network_ip_gateway }}" netmask="{{ libvirt_network_ip_netmask }}">
-  {% if libvirt_network_auto_dhcp %}
-    <dhcp>
-      <range start="{{ libvirt_network_ip_start }}" end="{{ libvirt_network_ip_end }}" />
-    </dhcp>
-  {% endif %}
+    {% if libvirt_network_auto_dhcp %}
+      <dhcp>
+        <range start="{{ libvirt_network_ip_start }}" end="{{ libvirt_network_ip_end }}" />
+      </dhcp>
+    {% endif %}
   </ip>
+{% endif %}
+
 </network>

@@ -80,6 +80,14 @@ control
 [neutron:children]
 network
 
+[frr:children]
+compute
+network
+
+[ovn-bgp-agent:children]
+compute
+network
+
 [openvswitch:children]
 network
 compute

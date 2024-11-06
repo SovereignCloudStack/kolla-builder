@@ -11,9 +11,18 @@
       name: libvirt_network
       tasks_from: delete.yml
     vars:
-      libvirt_network_name: "{{ item  }}"
-    with_items:
-    - "{{ network_ssh }}"
-    - "{{ network_openstack }}"
-    - "{{ network_neutron }}"
-    when: create_networks
+      libvirt_network_name: "{{ network_ssh }}"
+    when: destroy_network_ssh
+  - include_role:
+      name: libvirt_network
+      tasks_from: delete.yml
+    vars:
+      libvirt_network_name: "{{ network_openstack }}"
+    when: destroy_network_openstack
+  - include_role:
+      name: libvirt_network
+      tasks_from: delete.yml
+    vars:
+      libvirt_network_name: "{{ network_neutron }}"
+    when: destroy_network_neutron
+
