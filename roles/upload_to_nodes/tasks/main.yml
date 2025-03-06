@@ -26,11 +26,12 @@
 
 - name: Copy user globals file to deploy node
   copy:
-    src: "kolla-files/{{ globals_file }}"
+    src: "{{ globals_file }}"
     dest: /etc/kolla/globals.d/00-user-config.yml
     owner: kolla
     group: kolla
     mode: '0644'
+  when: globals_file != None
 
 - name: Template 'init-runonce' demo setup file
   template:
@@ -39,6 +40,8 @@
     owner: kolla
     group: kolla
     mode: '0775'
+
+
 - name: Copy all-in-one to deploy node
   copy:
     src: kolla-files/all-in-one
@@ -47,9 +50,10 @@
     group: kolla
     mode: '0644'
   when: is_aio
+
 - name: Copy multinode to deploy node
   copy:
-    src: "kolla-files/multinode"
+    src: "{{ multinode_file_path  }}"
     dest: /home/kolla/multinode
     owner: kolla
     group: kolla

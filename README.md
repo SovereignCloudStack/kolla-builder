@@ -1,156 +1,144 @@
-# Kolla Builder
 
-This repository contains a set of Ansible playbooks that will spawn and configure VMs (currently supporting libvirt only) to deploy Kolla.
+# Kolla Builder CLI
 
-## Prerequisites
-### Host Machine
-Machine where you run Libvirt instances that will run Kolla Can be the same as [Local Machine](#local-machine) or a remote machine.
-- Libvirt
-```bash
-  sudo apt install qemu qemu-kvm libvirt-dev
+Kolla Builder is a command-line tool designed to automate the deployment and management of OpenStack environments using Kolla and Ansible.
+
+## Features
+- **Project Initialization**: Create new Kolla-based OpenStack projects with predefined templates.
+- **Deployment**: Deploy OpenStack services on prepared nodes.
+- **Node Management**: Spawn, prepare, and destroy virtual machines for OpenStack deployment.
+- **Networking**: Manage networks for the deployment.
+- **Remote Access**: SSH into deployed nodes for troubleshooting.
+- **Service Installation**: Install NGINX on remote hosts.
+
+## Dependencies
+Ensure you have the following dependencies installed before using Kolla Builder:
+- **Python 3**
+- **Ansible** – Required for running deployment playbooks
+- **PyYAML** – For handling configuration files
+### These must be installed on remote server if you use remote server
+- **lxml** – For XML parsing (install with `sudo pip install`)
+- **Libvirt** – Required for managing virtual machines
+- **QEMU/KVM** – Required for running VMs
+- **Bridge-utils** – Helps with networking setup for virtual machines
+
+On Debian/Ubuntu, install dependencies with:
+```sh
+sudo apt update && sudo apt install -y python3 ansible python3-yaml python3-lxml libvirt-daemon-system libvirt-clients qemu-kvm bridge-utils
 ```
-- LibXML for python **Important:** install as root
-```bash
-sudo pip install lxml
-```
-### Local Machine
-Your machine where you run Kolla-Builder ansible playbooks from.
-- Virt-manager (optional)
-  ```bash
-  sudo apt install virt-manager
-  ```
-- [Kolla image](https://api.gx-scs.sovereignit.cloud:8080/swift/v1/AUTH_0b3c75f80b6743778daccec0da423465/Kolla%20Builder%20Image%2020240903/kolla-image.qcow2)
 
-- Ansible
-  ```bash
-  pip install ansible
-  ```
-- [Kolla Ansible source code](https://github.com/openstack/kolla-ansible)
-  ```bash
-  git clone https://opendev.org/openstack/kolla-ansible.git
-  ```
-- Copy SSH key from `ssh/id_kolla` to your `~/.ssh` directory
-  ```bash
-  cp ssh/id_kolla ~/.ssh
-  ```
-- Python libraries:
-```bash
-pip install libvirt-python
-pip install lxml
+On RHEL-based distributions:
+```sh
+sudo dnf install -y python3 ansible python3-pyyaml python3-lxml libvirt qemu-kvm bridge-utils
 ```
-- Docker for ARA (optional) - for ARA recording Ansible docker needs to be installed and runnig
-## Configuration
 
-- Edit the [example user config](example_config.yml) and options are documented in config examples.
+Make sure the `libvirtd` service is running:
+```sh
+sudo systemctl enable --now libvirtd
+```
+
+## Installation
+Make the script executable and place it in a directory within your `$PATH`:
+```sh
+chmod +x kolla-builder.py
+```
 
 ## Usage
-
-### Building Environment
-The `builder` script is used to manage nodes with `ansible-playbook` .
-#### Deploying ARA records ansible server (optional)
-
-To deploy ARA server and start recording host ansible plays with ARA,
-ensure flag `ara_enable` in `user_config.yml` is set to true and run:
-
-```bash
-./builder ara user/local-aio.yml
+Run the tool with the desired command:
+```sh
+./kolla-builder.py <command> [options]
 ```
 
-Nodes plays will be recorded to this server too. ARA UI will then be accessible
-on localhost/remote host on specified `ara_server_port`, 8000 by default.
+### General Options
+- `-i, --inventory <file>`: Specify an Ansible inventory file (default: `local`).
 
+## Available Commands and Options
 
-#### Spawning Nodes
+### 1. `init` – Initialize a New Kolla Project
+```sh
+./kolla-builder.py init <name> [options]
+```
+**Options:**
+- `-b, --branch <branch>`: Specify a Git branch for the project (default: `master`).
+- `-t, --template <file>`: Use a specific template file for the project.
+- `-n, --nodes <file>`: Use a specific nodes template file.
+- `-w, --network <file>`: Use a specific network template file.
+- `-m, --master-only`: Use only the master template file without merging other templates.
 
-To spawn a node or nodes, run:
-
-```bash
-./builder spawn user/local-aio.yml
+### 2. `deploy` – Deploy OpenStack
+```sh
+./kolla-builder.py deploy <name> [options]
 ```
 
-If you want to spawn the nodes on a remote server, use the `-r` option:
 
-```bash
-./builder -r spawn user/remote-multinode.yml
+### 3. `spawn` – Create Virtual Machines
+```sh
+./kolla-builder.py spawn <name>
+```
+Creates VMs for the specified project using libvirt.
+
+### 4. `prepare` – Prepare Nodes for Deployment
+```sh
+./kolla-builder.py prepare <name>
+```
+Runs Ansible playbooks to configure nodes before deploying OpenStack.
+
+### 5. `destroy` – Remove Virtual Machines
+```sh
+./kolla-builder.py destroy <name> [options]
+```
+**Options:**
+- `-d, --destroy-networks`: Remove associated networks as well.
+
+### 6. `destroy-networks` – Remove Only Networks
+```sh
+./kolla-builder.py destroy-networks <name>
+```
+Deletes networks associated with the project.
+
+### 7. `delete` – Completely Remove a Project
+```sh
+./kolla-builder.py delete <name> [options]
+```
+**Options:**
+- `-d, --destroy-networks`: Also delete associated networks.
+- **Warning**: This action is irreversible and requires confirmation.
+
+### 8. `ssh` – Connect to a Node via SSH
+```sh
+./kolla-builder.py ssh <name>
+```
+Opens an SSH session to the deployment node.
+
+### 9. `nginx` – Install NGINX on a Remote Host
+```sh
+./kolla-builder.py nginx <name>
+```
+Runs an Ansible playbook to install NGINX on the deployment node.
+
+## Configuration
+By default, Kolla Builder uses a configuration file (`builder-config.yaml`) with settings such as:
+- User directories
+- Template paths
+- Playbook locations
+
+Modify this file as needed before running the tool.
+
+## Example Usage
+Initialize a project with a custom network template:
+```sh
+./kolla-builder.py init my_project -w custom_network.yaml
+```
+Deploy OpenStack
+```sh
+./kolla-builder.py deploy my_project
+```
+Spawn VMs for the project:
+```sh
+./kolla-builder.py spawn my_project
+```
+Destroy a project and remove its networks:
+```sh
+./kolla-builder.py destroy my_project -d
 ```
 
-> **Note**: Only run the `spawn` action once to create the nodes. You need to delete them before
-running again.
-
-#### Preparing Nodes
-
-Once the nodes are booted, prepare them by running:
-
-```bash
-./builder prepare user/local-aio.yml
-```
-
-If you need to update something on the nodes, run the prepare action again:
-
-```bash
-./builder prepare user/local-aio.yml
-```
-
-#### Accessing Nodes
-
-- For aio deployment
-```bash
-ssh -F ssh_config openstack-aio
-# or whatever you named your node
-```
-
-- For multinode deployment
-```bash
-ssh -F ssh_config openstack-deployment
-# or whatever you named your deploy node
-```
-#### Configuring Reverse Proxy on Remote Nodes
-
-If you are using the remote option and need to configure a reverse proxy, run:
-
-```bash
-./builder -r nginx user/remote-aio.yml
-```
-
-### Deploy script
-
-- You can try the deploy script which is already on the node
-
-```bash
-./deploy
-```
-
-- If that fails, investigate the issue. Sometimes you just have to run the script again. If it doesn't help, see the next section.
-
-- Otherwise reffer to [Quick start for development](https://docs.openstack.org/kolla-ansible/latest/user/quickstart-development.html)
-
-### Remote Setup
-- You can use kolla-builder to spawn Kolla on a remote server/cloud instance
-- Edit [remote](remote) inventory and add your server
-```
-PUBLIC.IP.OF.REMOTE ansible_ssh_user=ubuntu ansible_become=True ansible_private_key_file=/path/to/your/ssh_key
-```
-- If you use a remote Openstack instance, you need:
-  - Network setup that allows outside connection
-  - SSH keypair
-  - Floating IP
-  - Security group rules allow:
-    - Egress for all connections
-    - Ingress for SSH(22)
-    - Ingress for HTTP(80)/HTTPS(443) to access Horizon from local browser
-    - Ingress for any additional port you reverse proxy to
-  - All the [prerequisites](#prerequisites) must be installed on the instance
-
-### Deletion
-
-
-To delete all nodes, use the delete action:
-
-```bash
-./builder delete user/local-multinode.yml
-```
-or for remote libvirt host
-
-```bash
-./builder -r delete user/local-multinode.yml
-```

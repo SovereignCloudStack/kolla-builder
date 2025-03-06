@@ -17,3 +17,4 @@ mac_addresses: []
 ssh_config: "ssh_config"
 is_remote: false
 libvirt_domain_type: kvm
+proxy_jump_host_name: "kolla-proxy-jump"

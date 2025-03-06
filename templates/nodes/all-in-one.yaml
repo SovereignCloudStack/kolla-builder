@@ -1,0 +1,11 @@
+## ALL-IN-ONE SETUP
+# WARNING! delete this section if your setup is multinode
+# Whether this setup is for all-in-one deployment
+# keep `true` for aio
+is_aio: true
+# Name of the node
+# # Recommended resources for the node
+ram_size: 10000
+# use max available cpus
+cpu_count: 12
+disk_size: 50

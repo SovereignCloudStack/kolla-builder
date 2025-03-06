@@ -11,9 +11,9 @@ server {
 {%- endmacro%}
 
 {% if use_tls| bool%}
-{{ stream(443,ssl=true) }}
+{{ stream(revse_proxy_https_port,ssl=true) }}
 {% else %}
-{{ stream(80) }}
+{{ stream(reverse_proxy_http_port) }}
 {%- endif %}
 
 {% for port in reverse_proxy_vip_ports_openstack %}

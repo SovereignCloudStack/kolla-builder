@@ -1,0 +1,61 @@
+## KOLLA IMAGES
+# Directory where the disk images will be located
+# default is the libvirt image pool
+# make sure you have enough disk space on the partition
+# if not then change to something on your /home
+image_pool: "/var/lib/libvirt/images"
+
+# Path to the base node image
+image_path: "{{ image_pool }}/kolla-image.qcow2"
+
+
+## REMOTE HOST
+# If you are running libvirt on remote host
+is_remote: false
+# Image pool on remote host
+remote_image_pool: "/var/lib/libvirt/images"
+
+# SSH key for the remote host
+proxy_server_private_key: "{{ lookup('ansible.builtin.env', 'HOME') }}/.ssh/id_rsa"
+
+
+# The branch to apply patches to
+git_branch: "master"
+
+# The patches applyied using git rebase
+git_patches: []
+
+git_patch_kolla: true
+## SSH
+# Absolute path to the ssh key
+# Either copy key from ssh/id_kolla to your .ssh directory
+# or modify this config to point to ssh/id_kolla
+kolla_ssh_key: "{{ lookup('ansible.builtin.env', 'HOME') }}/.ssh/id_kolla"
+
+
+# Path to kolla-ansible source code
+kolla_source_local_path: "./kolla-ansible"
+
+# Mode (recommended to be 0777 if you plan to mount it to containers using `default_extra_mounts`)
+additional_upload_mode: "0777"
+
+
+# List of additional directories to upload
+additional_uploads: []
+
+# Additional directiories to be uploaded to deploy node only
+# NOTE: This has effect only in multinode setup
+additional_uploads_deploy_node: []
+## REVERSE PROXY (REMOTE HOST ONLY)
+
+# Openstack services to forward reverse proxy to
+# 80 and 443 Are added automaticaly
+# Go to http(s)://floating-ip-of-your-remote to access Horizon UI
+reverse_proxy_vip_ports_openstack: []
+
+# Non-openstack services, that normally should not be accessible from outside
+# Format:
+# - ip: ...
+#   port: ...
+#   ssl: ... (no default value you must specify true/false)
+reverse_proxy_additional_servers: []

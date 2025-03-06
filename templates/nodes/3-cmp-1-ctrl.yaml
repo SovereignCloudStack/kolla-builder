@@ -1,0 +1,66 @@
+## MULTINODE SETUP
+# WARNING! delete this section if your setup is multinode
+# Uncomment for multinode setup
+# is_aio: false
+# Deafult number of CPU allocated to each node
+# it's recommended to allocate max CPUs
+default_cpu: 12
+# Default RAM for each node
+# Minimal 1GB RAM to boot the image
+default_ram: 1024
+# Default RAM for each node
+# Minimal 25GB to boot the image
+default_disksize: 25
+is_aio: false
+# # Node configuration
+# each node can be of different type
+#   control: for openstack control plane components
+#   network: for openstack networking services
+#   compute: openstack compute host
+#   storage: for storage services
+#   monitoring: for monitoring services
+#   deployment: for running kolla-ansible itself, not part of openstack
+# You need exactly one deployment and at least one workload (everything else) node
+# You have to have the deploy node separated from everything else
+# unless you deploy in aio mode, in which case use different config
+# file (TODO)
+# You can edit ram_size disk_size and cpu_count for each node
+
+# 4+1 node example (3 compute nodes, one control node, one deployment node)
+# You can add more if you wish, or create dedicated network nodes for example
+nodes:
+
+# # Controll node
+# Hosts everything that is not compute
+
+  - name: "control"
+    control: true
+    storage: true
+    monitoring: true
+    network: true
+# false is the default option for each node type
+    compute: false
+#  minimum ram for this node
+    ram_size: 8192
+    disk_size: 25
+#   cpu_count: 12
+
+# # Compute  nodes
+# For compute instances
+  - name: "compute-01"
+    compute: true
+    ram_size: 4096
+
+  - name: "compute-02"
+    compute: true
+    ram_size: 4096
+
+  - name: "compute-03"
+    compute: true
+    ram_size: 4096
+
+# # Deployment node
+# SSH into this node and run kolla
+  - name: "deployment"
+    deployment: true
+    ram_size: 1024

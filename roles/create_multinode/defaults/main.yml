@@ -1,7 +1,7 @@
 ---
 # defaults file for create_multinode
 multinode_file_path: "kolla-inventory"
-vm_list_path: "vm_list.yml"
+vm_list_path: "{{ inventory_name }}.yml"
 ansible_args: >-
   ansible_ssh_user={{ kolla_user }}
   ansible_become=True

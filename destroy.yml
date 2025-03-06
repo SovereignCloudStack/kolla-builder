@@ -1,0 +1,9 @@
+---
+- name: Delete Kolla Nodes
+  hosts: all
+  user: root
+  ignore_errors: true
+
+  tasks:
+  - include_role:
+      name: delete_nodes

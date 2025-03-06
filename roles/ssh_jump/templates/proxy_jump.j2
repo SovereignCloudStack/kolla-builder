@@ -1,4 +1,4 @@
-Host kolla-proxy-jump
+Host {{ proxy_jump_host_name }}
     User  {{ remote_username }}
     Hostname {{ remote_ip }}
     IdentityFile {{ proxy_server_private_key }}

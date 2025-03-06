@@ -24,9 +24,13 @@
   shell: |
     virsh undefine --domain {{ item }}
   loop: "{{ to_delete }}"
+
+- debug:
+    msg: "{{ remote_image_pool if is_remote else image_pool}}/{{ item }}.qcow2"
+  loop: "{{ to_delete }}"
 - name: "Deleting diskimages"
   file:
-    path: "{{image_pool ~'/'~ item}}.qcow2"
+    path: "{{ remote_image_pool if is_remote else image_pool}}/{{ item }}.qcow2"
     state: absent
   loop: "{{ to_delete }}"
 

@@ -4,6 +4,9 @@ reverse_proxy_ip_address: "{{kolla_internal_vip_address}}"
 # If your remote server is on the cloud, make sure
 # ingress to all ports you forward is allowed
 # Openstack services, which use kolla internall HAProxy
+reverse_proxy_http_port: 80
+reverse_proxy_https_port: 443
+reverse_proxy_module_filename: "passthrough.conf"
 reverse_proxy_vip_ports_openstack: []
 # Default Kolla ports if needed, forward by uncommenting
 # - 8774  # Compute

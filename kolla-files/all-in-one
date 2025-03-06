@@ -76,7 +76,8 @@ control
 
 [nova:children]
 control
-
+[nova-metadata:children]
+control
 [neutron:children]
 network
 

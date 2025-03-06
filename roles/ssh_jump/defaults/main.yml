@@ -2,3 +2,4 @@
 # defaults file for ssh_jump
 remote_username: ubuntu
 proxy_server_private_key: "{{ lookup('ansible.builtin.env', 'HOME') }}/.ssh/id_rsa"
+proxy_jump_host_name: "kolla-proxy-jump"
