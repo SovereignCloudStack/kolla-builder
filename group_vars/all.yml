@@ -29,7 +29,9 @@ ansible_args: >-
   ansible_become=True
   ansible_private_key_file={{ kolla_ssh_key }}
   ansible_python_interpreter={{ kolla_python_interpereter }}
-
+inventory_name: "kolla-inventory"
+multinode_file_path: "{{ inventory_name }}"
+aio_filepath:  "{{ inventory_name }}"
 node_vg: ubuntu-vg
 node_lv: ubuntu-lv
 globals_file: null
@@ -44,9 +46,9 @@ additional_uploads: []
 additional_uploads_deploy_node: []
 ara_enable: false
 
-network_ssh_ip: "192.168.122.0"
-network_openstack_ip: "192.168.123.0"
-network_neutron_ip: "192.168.124.0"
+network_ssh_ip: "192.168.122.1"
+network_openstack_ip: "192.168.123.1"
+network_neutron_ip: "192.168.124.1"
 
 network_ssh_ip_start: '{{ network_ssh_ip.split(".")[:-1] | join(".") + ".2" }}'
 network_ssh_ip_end: '{{ network_ssh_ip.split(".")[:-1] | join(".") + ".254" }}'
@@ -54,15 +56,29 @@ network_ssh_ip_gateway: '{{ network_ssh_ip.split(".")[:-1] | join(".") + ".254" 
 
 network_openstack_ip_start: '{{ network_openstack_ip.split(".")[:-1] | join(".") + ".2" }}'
 network_openstack_ip_end: '{{ network_openstack_ip.split(".")[:-1] | join(".") + ".254" }}'
-network_openstack_ip_gateway: '{{ network_openstack_ip.split(".")[:-1] | join(".") + ".254" }}'
+network_openstack_ip_gateway: '{{ network_openstack_ip.split(".")[:-1] | join(".") + ".1" }}'
 
 network_neutron_ip_start: '{{ network_neutron_ip.split(".")[:-1] | join(".") + ".2" }}'
 network_neutron_ip_end: '{{ network_neutron_ip.split(".")[:-1] | join(".") + ".254" }}'
-network_neutron_ip_gateway: '{{ network_neutron_ip.split(".")[:-1] | join(".") + ".254" }}'
+network_neutron_ip_gateway: '{{ network_neutron_ip.split(".")[:-1] | join(".") + ".1" }}'
 
+external_network_cidr: '{{ network_neutron_ip.split(".")[:-1] | join(".") + ".0" }}/24'
+external_network_dhcp_start: '{{ network_neutron_ip.split(".")[:-1] | join(".") + ".150" }}'
+external_network_dhcp_end: '{{ network_neutron_ip.split(".")[:-1] | join(".") + ".199" }}'
+external_network_gateway: '{{ network_neutron_ip_gateway }}'
+external_network_type: "flat"
+external_network_vlan_id: 123
 
 network_ssh_bridge: virbr0
 network_openstack_bridge: virbr2
 network_neutron_bridge: virbr3
 
 create_networks: false
+create_network_ssh: "{{ create_networks }}"
+create_network_openstack: "{{ create_networks }}"
+create_network_neutron: "{{ create_networks }}"
+
+destroy_networks: false
+destroy_network_ssh: "{{ destroy_networks }}"
+destroy_network_openstack: "{{ destroy_networks }}"
+destroy_network_neutron: "{{ destroy_networks }}"

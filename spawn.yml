@@ -14,7 +14,7 @@
         libvirt_network_ip_gateway: "{{ network_ssh_ip_gateway }}"
         libvirt_network_bridge: "{{ network_ssh_bridge }}"
         libvirt_network_auto_dhcp: false
-      when: create_networks
+      when: create_network_ssh
 
     - include_role:
         name: libvirt_network
@@ -25,7 +25,8 @@
         libvirt_network_ip_gateway: "{{ network_openstack_ip_gateway }}"
         libvirt_network_ip_prefix: "{{ network_openstack_prefix }}"
         libvirt_network_bridge: "{{ network_openstack_bridge }}"
-      when: create_networks
+        libvirt_network_type: "route"
+      when: create_network_openstack
 
     - include_role:
         name: libvirt_network
@@ -36,7 +37,9 @@
         libvirt_network_ip_gateway: "{{ network_neutron_ip_gateway }}"
         libvirt_network_ip_prefix: "{{ network_neutron_prefix }}"
         libvirt_network_bridge: "{{ network_neutron_bridge }}"
-      when: create_networks
+        libvirt_network_auto_dhcp: false
+        libvirt_network_type: "route"
+      when: create_network_neutron
 
     - include_role:
         name: create_aio

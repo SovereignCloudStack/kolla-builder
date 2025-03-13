@@ -76,8 +76,17 @@ control
 
 [nova:children]
 control
-
+[nova-metadata:children]
+control
 [neutron:children]
+network
+
+[frr:children]
+compute
+network
+
+[ovn-bgp-agent:children]
+compute
 network
 
 [openvswitch:children]

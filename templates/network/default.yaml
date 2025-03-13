@@ -1,0 +1,23 @@
+## NETWORK
+# 192.168.101.0/24
+network_ssh: "kolla-ssh"
+
+# 192.168.102.0/24
+network_openstack: "kolla-openstack"
+
+# 192.168.103.0/24
+network_neutron: "kolla-neutron"
+
+network_ssh_ip: "192.168.101.1"
+network_openstack_ip: "192.168.102.0"
+network_neutron_ip: "192.168.103.0"
+
+
+network_ssh_bridge: virbr1
+network_openstack_bridge: virbr2
+network_neutron_bridge: virbr3
+
+create_networks: true
+destroy_networks: true
+
+kolla_internal_vip_address: "192.168.101.200"

@@ -123,7 +123,8 @@ control
 
 [nova:children]
 control
-
+[nova-metadata:children]
+control
 [neutron:children]
 network
 
@@ -321,6 +322,14 @@ neutron
 neutron
 
 [neutron-ovn-agent:children]
+compute
+network
+
+[frr:children]
+compute
+network
+
+[ovn-bgp-agent:children]
 compute
 network
 

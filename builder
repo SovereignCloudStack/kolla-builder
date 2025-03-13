@@ -56,26 +56,53 @@ shift 2
 action=${action%.yml}
 
 # Validate the action
-valid_actions=("ara" "spawn" "prepare" "delete" "nginx")
+valid_actions=("ara" "spawn" "prepare" "delete" "nginx" "deploy" "ssh" )
 if [[ ! " ${valid_actions[@]} " =~ " ${action} " ]]; then
-    echo "Error: invalid action. Valid actions are: ara, spawn, prepare, delete, nginx."
+    echo "Error: invalid action. Valid actions are: ara, spawn, prepare, delete, deploy, nginx."
     show_help
     exit 1
 fi
 vmlist=""
 
 if [ "$action" == "prepare" ]; then
-    inventory="kolla-inventory"
+    kolla_inventory=$(grep "inventory_name:" $user_variables | cut -d" " -f2 | sed 's/"//g')
+    if [ -z "${kolla_inventory}" ]; then
+        inventory="kolla-inventory"
+    else
+        inventory="${kolla_inventory}"
+    fi
+
 
 elif [ "$action" == "delete" ]; then
-    vmlist="-e @vm_list.yml"
+    kolla_inventory=$(grep "inventory_name:" $user_variables | cut -d" " -f2 | sed 's/"//g')
+    if [ -z "${kolla_inventory}" ]; then
+        vmlist="-e @kolla_inventory.yml"
+    else
+        vmlist="-e @${kolla_inventory}.yml"
+    fi
+    vmlist=""
 
 elif [ "$action" == "nginx" ]; then
     inventory="remote"
 fi
 
+
+
 cmd="ansible-playbook -i $inventory $action.yml -e @$user_variables $vmlist"
 
+if [ "$action" == "deploy" ]; then
+ssh -F ssh_config -t $user_variables 'bash -i -c "./deploy"'
+exit 0
+
+
+fi
+
+if [ "$action" == "ssh" ]; then
+ssh -F ssh_config $user_variables
+exit 0
+
+
+fi
 # Add any remaining arguments
 cmd="$cmd $@"
 

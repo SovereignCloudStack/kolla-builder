@@ -23,7 +23,7 @@
   include_tasks: inventory_create.yml
   vars:
     use_node_names: false
-    multinode_file_path: kolla-files/multinode
+    multinode_file_path: kolla-files/{{ inventory_name }}
 
 - name: Add Proxy Jump to SSH Config
   include_role:

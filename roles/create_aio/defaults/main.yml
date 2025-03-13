@@ -8,3 +8,4 @@ ansible_args: >-
   ansible_private_key_file={{ kolla_ssh_key }}
   ansible_python_interpreter={{ kolla_python_interpereter }}
 is_remote: false
+aio_filepath: "kolla-inventory"

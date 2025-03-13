@@ -1,0 +1,22 @@
+---
+- name: Delete Kolla Nodes
+  hosts: all
+  user: root
+  ignore_errors: true
+
+  tasks:
+  - include_role:
+      name: libvirt_network
+      tasks_from: delete.yml
+    vars:
+      libvirt_network_name: "{{ network_ssh }}"
+  - include_role:
+      name: libvirt_network
+      tasks_from: delete.yml
+    vars:
+      libvirt_network_name: "{{ network_openstack }}"
+  - include_role:
+      name: libvirt_network
+      tasks_from: delete.yml
+    vars:
+      libvirt_network_name: "{{ network_neutron }}"
